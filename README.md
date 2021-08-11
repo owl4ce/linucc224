@@ -38,6 +38,7 @@ https://github.com/owl4ce/linucc224
 <details>
   <summary><strong>See patching in action</strong></summary>
   
+  <br>
   <p align="center"><img src="./screenshots/2021-08-12-062659_1092x1882_scrot.png" align="center"/></p>
   
 </details>
@@ -45,27 +46,33 @@ https://github.com/owl4ce/linucc224
 <details>
   <summary><strong>See restoration in action</strong></summary>
   
+  <br>
   <p align="center"><img src="./screenshots/2021-08-12-062843_1092x454_scrot.png" align="center"/></p>
   
 </details>
 
-> Some [notes](https://github.com/owl4ce/kurisu-x86_64) if you use an image more than 80x80 pixels.
+> Some [notes](https://github.com/owl4ce/kurisu-x86_64) if you use an image more than 80x80 pixels. That takes some crazy tricks.
 
-> **How does it work?**  
+> **How does it work?** :thinking:  
 > It patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch), flexibly based on your own logo filename.
 
 > I think, it works like a charm since linux 3.2 onwards.
 
-> :heavy_check_mark: **`5.13.x`**
+> :heavy_check_mark:   **`5.13.x`**
 
 ##  
-### Enable config
+### Enable the new logo in menuconfig
 
 > `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
-<p align="center"><img src="./screenshots/2021-08-12-051730_1301x748_scrot.png" align="center"/></p>
+<p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>
 
 > `Device Drivers` -> `Graphics support` -> `Console display driver support`
-<p align="center"><img src="./screenshots/2021-08-12-051704_1301x748_scrot.png" align="center"/></p>
+<p align="center"><img src="./screenshots/2021-08-12-064710_1301x748_scrot.png" align="center"/></p>
 
 > `Device Drivers` -> `Graphics support` -> `Bootup logo`
-<p align="center"><img src="./screenshots/2021-08-12-051654_1301x748_scrot.png" align="center"/></p>
+<p align="center"><img src="./screenshots/2021-08-12-064723_1301x748_scrot.png" align="center"/></p>
+
+##  
+### Now what?
+
+Of course rebuild the kernel. :disappointed_relieved:

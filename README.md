@@ -40,7 +40,9 @@ https://github.com/owl4ce/linucc224
 
 > `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-08-12-051730_1301x748_scrot.png" align="center"/></p>
+
 > `Device Drivers` -> `Graphics support` -> `Console display driver support`
 <p align="center"><img src="./screenshots/2021-08-12-051704_1301x748_scrot.png" align="center"/></p>
+
 > `Device Drivers` -> `Graphics support` -> `Bootup logo`
 <p align="center"><img src="./screenshots/2021-08-12-051654_1301x748_scrot.png" align="center"/></p>

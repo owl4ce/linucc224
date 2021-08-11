@@ -3,13 +3,13 @@
 ##  
 ### Dependencies <img alt="" align="right" src="https://badges.pufler.dev/visits/owl4ce/linucc224?style=flat-square&label=&color=000000&logo=GitHub&logoColor=white&labelColor=373e4d"/>
 > **Required:**  
-`sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
+> `sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
 
 > **Optional:**  
-`imagemagick` `diff`
-
-* *imagemagick for image identification.*
-* *diff for verbose patch changes.*
+> `imagemagick` `diff`
+>
+> * *imagemagick for better image identification.*
+> * *diff for verbose mode to view patch changes.*
 
 ##  
 ### Usage

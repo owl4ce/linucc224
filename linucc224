@@ -30,7 +30,7 @@ chkdep() {
 }
 
 # Diffs between changes if verbose enabled.
- diffz() {
+diffz() {
     if [ "$V" = "v" ] && [ -x "$(command -v "diff")" ]; then
         str; >&2 diff --color=auto -u "$1" "$2"; str
     fi

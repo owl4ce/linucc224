@@ -1,5 +1,7 @@
 ## <p align="center">`linucc224`</p>
 
+<p align="center"><img src="https://repository-images.githubusercontent.com/393654854/5423f869-eadf-41c9-ba0b-078162f39b2f" align="center"/></p>
+
 ##  
 ### Dependencies <img alt="" align="right" src="https://badges.pufler.dev/visits/owl4ce/linucc224?style=flat-square&label=&color=000000&logo=GitHub&logoColor=white&labelColor=373e4d"/>
 > **Required:**  

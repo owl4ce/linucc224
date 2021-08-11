@@ -6,10 +6,10 @@
 > `sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
 
 > **Optional:**  
-> `imagemagick` `diff`
+> `imagemagick` `diffutils`
 >
 > * *imagemagick for better image identification.*
-> * *diff for verbose mode to view patch changes.*
+> * *diffutils for verbose mode to view patch changes.*
 
 ##  
 ### Usage

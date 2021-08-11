@@ -2,10 +2,10 @@
 
 ##  
 ### Dependencies <img alt="" align="right" src="https://badges.pufler.dev/visits/owl4ce/linucc224?style=flat-square&label=&color=000000&logo=GitHub&logoColor=white&labelColor=373e4d"/>
-> **Required:**
+> **Required:**  
 `sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
 
-> **Optional:**
+> **Optional:**  
 `imagemagick` `diff`
 
 * *imagemagick for image identification.*

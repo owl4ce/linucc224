@@ -35,7 +35,7 @@ https://github.com/owl4ce/linucc224
 > **How does it work?**  
 > It patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch), flexibly based on your own logo filename.
 
-> I think, it works from linux 3.2 onwards.
+> I think, it works from linux 3.2 onwards.  
 > :heavy_check_mark: **`5.13.x`**
 
 ##  

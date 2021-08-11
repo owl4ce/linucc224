@@ -1,0 +1,299 @@
+#!/usr/bin/env sh
+
+# POSIX-sh script to patch Linux source code to add custom framebuffer logo.
+# Author: owl4ce <findarr@pm.me>
+# License: GPL-2.0
+# -----------------------------------
+# https://github.com/owl4ce/linucc224
+
+LC_ALL=C LANG=C; # Speedup script by disable unicode. Below are color codes.
+R="\033[1;31m" G="\033[1;32m" M="\033[1;35m" W="\033[1;37m" B="\033[1;34m"
+NC="\033[0m" r="\033[0;31m" g="\033[4;32m" m="\033[0;35m" b="\033[0;34m"
+
+# Output messages and error code marker.
+err() { >&2 printf "${R} > error:${NC} ${@}\n" && RC=1; }
+msg() { printf "${G} > ${NC}${@}\n"; }
+str() { >&2 printf "${R}~~~${NC}\n"; } # For diff output.
+
+# Dependencies checker.
+chkdep() {
+    while [ -n "$1" ]; do
+        if [ "$1" = "sudo" -o "$1" = "doas" ]; then
+            [ -x "$(command -v "$1")" ] && export PRIV="$1"
+        elif [ "$1" != "sudo" -o "$1" != "doas" ] && [ ! -x "$(command -v "$1")" ]; then
+            err "${m}${1}${NC} is not installed. Install it first! ${r}ツ${NC}"
+            if [ "$1" = "ppmquant" ]; then # Special message for netpbm.
+                msg "${m}netpbm${NC} is required for converting purpose! ${m}ツ${NC}"
+            fi
+        fi; shift
+    done
+}
+
+# Diffs between changes if verbose enabled.
+ diffz() {
+    if [ "$V" = "v" ] && [ -x "$(command -v "diff")" ]; then
+        str; >&2 diff --color=auto -u "$1" "$2"; str
+    fi
+}
+
+# Copy and move, with v if verbose enabled.
+copyz() { ${PRIV} >&2 cp -f${V} "$1" "$2"; }
+movez() { ${PRIV} >&2 mv -f${V} "$1" "$2"; }
+
+# Press enter or return to continue.
+retcon() {
+    while :; do
+        msg "${m}[${NC}${R}enter${NC}/${R}return${NC} to continue${m}] [${NC}${R}ctrl${NC}+${R}c${NC} to cancel${m}]${NC}"
+        read return_con
+        if [ -z "$return_con" ]; then break
+        else err "You pressed the wrong button! (${m}${return_con}${NC})" && unset RC
+        fi
+    done
+}
+
+# Just call `newxit` instead of `exit $?`, we don't use `return <num>` here.
+# So if `err` called, the RC var will defined with 1 as well as return code.
+newxit() { [ ${RC:-0} -eq 1 ] && exit ${RC} ||:; } # Except for help option.
+
+# Checking all required dependencies.
+chkdep "pngtopnm" "ppmquant" "pnmtoplainpnm" "file" "basename" "dirname" "grep" "cut" "tr" "sed" "cp" "mv" "doas" "sudo"
+[ -z "$PRIV" ] && err "${m}sudo${NC} or ${m}doas${NC} not installed on your system! ${r}ツ${NC}" || : # sudo/doas.
+newxit # Exit with correct return code if one of dependencies are not exist.
+
+# helps messages.
+help() {
+    printf "\n${R}*${NC} Easily add your own Linux framebuffer logo by patching it!\n"
+    printf "\n${W}USAGE:${NC}"
+    printf "\n  $(basename ${0}) ${b}[${m}options${b}]${NC} ${g}/path/to/kernel_sources${NC}\n"
+    printf "\n${W}OPTIONS:${NC}"
+    printf "\n  ${m}-p ${g}/path/to/your_logo${NC}			${r}[${NC}    patch    ${r}]${NC}"
+    printf "\n  ${m}-r					${r}[${NC} restore all ${r}]${NC}"
+    printf "\n  ${m}-v					${r}[${NC}   verbose   ${r}]${NC}"
+    printf "\n  ${m}-h					${r}[${NC}    helps    ${r}]${NC}\n"
+    printf "\nhttps://github.com/owl4ce/linucc224\n\n"
+    exit 0
+}
+
+# Detecting valid Linux kernel source.
+kernel_detect() {
+    LIBMOD="/lib/modules/$(uname -r)/source"               # system installed source directory.
+    LINUCC="drivers/video/logo/logo_linux_clut224.ppm"     # default logo_linux_clut224.ppm file.
+    
+    # There are contains 3 levels: manual locate, system installed, and invalid Linux kernel.
+    if { [ -L "$@" ] || [ -d "$@" ]; } 2>/dev/null && [ -f "${@}/${LINUCC}" ]; then # Manual.
+        msg "Linux kernel source detected as valid source! ${m}ツ${NC}"
+        KERNEL_SOURCE="$@" && msg "${g}${KERNEL_SOURCE}${NC}"
+    elif [ -L "$LIBMOD" ] || [ -d "$LIBMOD" ] && [ -f "${LIBMOD}/${LINUCC}" ]; then # System.
+        msg "Linux kernel source not manually located or invalid source! Using valid fallback .."
+        KERNEL_SOURCE="$LIBMOD" && msg "${g}${KERNEL_SOURCE}${NC}"
+    else
+        err "Invalid Linux kernel source! See help option (${m}-h${NC})."
+    fi; newxit
+    
+    # Test write access, or run over sudo or doas.
+    test -w "$KERNEL_SOURCE" && unset PRIV || :
+    
+    LINUX_H="${KERNEL_SOURCE}/include/linux/linux_logo.h"  # kernel linux_logo header file.
+    DRIVLOG="${KERNEL_SOURCE}/drivers/video/logo"          # kernel logo source directory.
+    KCONFIG="${DRIVLOG}/Kconfig"                           # kernel configuration file.
+    LOGO__C="${DRIVLOG}/logo.c"                            # kernel logo source code.
+    MK_FILE="${DRIVLOG}/Makefile"                          # kernel logo makefile.
+    BUP_EXT="linucc224_orig"                               # default backup filename.
+    export LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE BUP_EXT # export the environment variables.
+}
+
+# Convert the logo from any .ext into .ppm.
+any2ppm() {
+    # Identify if arguments is valid image file.
+    ident() {
+        # imagemagick as main, file as fallback.
+        >/dev/null 2>&1 identify "$@"       || \
+        file "$@" | grep -qE 'image|bitmap' && \
+        msg "$(file "$LOGO" | grep -oP ': \K.*')"
+    }
+    if ident "$LOGO"; then # Do convert to .ppm.
+        if ! file "$LOGO" | grep -qE '80'; then # Verify if the image file size is 80x80 pixel.
+            msg "The image file size is not ${m}80${NC}x${m}80${NC}! Are you sure to continue?"
+            retcon
+        fi
+        # The final lowercase filename and path.
+        LOGONM="$(basename "$LOGO" | cut -d'.' --complement -f2- | tr '[:upper:]' '[:lower:]')"
+        DOTPPM="$(dirname "$LOGO")/logo_${LOGONM}_clut224.ppm"; export LOGONM DOTPPM
+        msg "Detected ${g}${LOGO}${NC} as valid image file. Converting .." # Do the magic now.
+        pngtopnm "$LOGO" | ppmquant -fs 223 | pnmtoplainpnm > "$DOTPPM" && \
+        msg "Saved as ${g}${DOTPPM}${NC}"   || err "Failed to convert!"
+        [ -f "$DOTPPM" ] && msg "$(file "$DOTPPM" | grep -oP ': \K.*')" || :
+    else
+        err "${g}${LOGO}${NC} is an invalid image file! ${r}ツ${NC}"
+    fi; newxit
+}
+
+# Patch the Linux kernel source.
+kernel_patch() {
+    patch_msg() { msg "Patching ${g}${@}${NC} .."; }
+    already_msg() { err "${g}${@}${NC} already patched! ** ${m}${LOGOCAP}${NC} **"; }
+    fails_msg() { err "Failed to patch ${g}${@}${NC} from the Linux kernel source."; }
+    
+    # UPPERCASE and Capital logo name conversion.
+    LOGOUPC="$(echo "$LOGONM" | tr '[:lower:]' '[:upper:]')"
+    LOGOCAP="$(echo "$LOGONM" | sed 's/.*/\u&/')"
+    
+    msg "Patching Linux kernel source code .."; retcon
+    ${PRIV} echo "" >/dev/null # Continue confirmation.
+    
+    # logo_?_clut224.ppm (special)
+    if [ -f "$DOTPPM" ]; then
+        msg "Installing converted logo into ${g}${DRIVLOG}/${NC} .."
+        copyz "$DOTPPM" "${DRIVLOG}/." \
+        || err "Failed to install ${g}${DOTPPM}${NC} into Linux kernel source."
+    fi
+    
+    # Kconfig
+    if [ -f "$KCONFIG" ] && grep -qo "LOGO_${LOGOUPC}_CLUT224" "$KCONFIG"; then
+        already_msg "$KCONFIG"
+    elif [ -f "$KCONFIG" ]; then
+        patch_msg "$KCONFIG"
+        copyz "$KCONFIG" "${KCONFIG}.${BUP_EXT}" && \
+        ${PRIV} sed -i "/^config LOGO_LINUX_CLUT224/i \
+	config LOGO_${LOGOUPC}_CLUT224\n\
+	bool \"Custom 224-color ${LOGOCAP} logo\"\n\
+	default y\n" "$KCONFIG" && \
+        diffz "${KCONFIG}.${BUP_EXT}" "$KCONFIG" \
+        || fails_msg "Kconfig"
+    fi
+    
+    # logo.c
+    if [ -f "$LOGO__C" ] && grep -qo "CONFIG_LOGO_${LOGOUPC}_CLUT224" "$LOGO__C"; then
+        already_msg "$LOGO__C"
+    elif [ -f "$LOGO__C" ]; then
+        patch_msg "$LOGO__C"
+        copyz "$LOGO__C" "${LOGO__C}.${BUP_EXT}" && \
+        ${PRIV} sed -i "/^#ifdef CONFIG_LOGO_LINUX_CLUT224/i \
+#ifdef CONFIG_LOGO_${LOGOUPC}_CLUT224\n\
+		/* Custom ${LOGOCAP} logo */\n\
+		logo = &logo_${LOGONM}_clut224;\n\
+#endif" "$LOGO__C" && \
+        diffz "${LOGO__C}.${BUP_EXT}" "$LOGO__C" \
+        || fails_msg "logo.c"
+    fi
+    
+    # Makefile
+    if [ -f "$MK_FILE" ] && grep -qo "logo_${LOGONM}_clut224.o" "$MK_FILE"; then
+        already_msg "$MK_FILE"
+    elif [ -f "$MK_FILE" ]; then
+        patch_msg "$MK_FILE"
+        copyz "$MK_FILE" "${MK_FILE}.${BUP_EXT}" && \
+        ${PRIV} sed -i "/^obj-\$(CONFIG_LOGO_LINUX_CLUT224)	+= logo_linux_clut224.o/i \
+obj-\$(CONFIG_LOGO_${LOGOUPC}_CLUT224)	+= logo_${LOGONM}_clut224.o" "$MK_FILE" && \
+        diffz "${MK_FILE}.${BUP_EXT}" "$MK_FILE" \
+        || fails_msg "Makefile"
+    fi
+    
+    # linux_logo.h
+    if [ -f "$LINUX_H" ] && grep -qo "logo_${LOGONM}_clut224" "$LINUX_H"; then
+        already_msg "$LINUX_H"
+    elif [ -f "$LINUX_H" ]; then
+        patch_msg "$LINUX_H"
+        copyz "$LINUX_H" "${LINUX_H}.${BUP_EXT}" && \
+        ${PRIV} sed -i "/^extern const struct linux_logo logo_linux_clut224;/i \
+extern const struct linux_logo logo_${LOGONM}_clut224;" "$LINUX_H" && \
+        diffz "${LINUX_H}.${BUP_EXT}" "$LINUX_H" \
+        || fails_msg "linux_logo.h"
+    fi
+    
+    newxit
+    
+    msg "The Linux kernel source successfully patched."
+    msg "It's time for you to turn on the new logo! ${m}ツ${NC}"
+    msg "${W}menuconfig:${NC} ${m}Device Drivers${NC} -> ${m}Graphics support${NC} -> ${m}Bootup logo${NC}"
+    msg "${W}   .config:${NC} CONFIG_${LOGOUPC}_LINUX_CLUT224=y"
+}
+
+# Restore all applied logo in the Linux kernel source.
+kernel_restore() {
+    restore_msg() { msg "Restoring original ${g}${@}${NC} .."; }
+    already_msg() { err "${g}${@}${NC} already clean! ${m}ツ${NC}"; }
+    fails_msg() { err "Failed to restore original ${g}${@}${NC} from the Linux kernel source."; }
+    
+    msg "Restoring Linux kernel source code .."; retcon
+    ${PRIV} echo "" >/dev/null # Continue confirmation.
+    
+    # Kconfig
+    if [ -f "${KCONFIG}.${BUP_EXT}" ]; then
+        restore_msg "$KCONFIG"
+        movez "${KCONFIG}.${BUP_EXT}" "$KCONFIG" \
+        || fails_msg "Kconfig"
+    elif [ ! -f "${KCONFIG}.${BUP_EXT}" ]; then
+        already_msg "$KCONFIG"
+    fi
+    
+    # logo.c
+    if [ -f "${LOGO__C}.${BUP_EXT}" ]; then
+        restore_msg "$LOGO__C"
+        movez "${LOGO__C}.${BUP_EXT}" "$LOGO__C" \
+        || fails_msg "logo.c"
+    elif [ ! -f "${LOGO__C}.${BUP_EXT}" ]; then
+        already_msg "$LOGO__C"
+    fi
+    
+    # Makefile
+    if [ -f "${MK_FILE}.${BUP_EXT}" ]; then
+        restore_msg "$MK_FILE"
+        movez "${MK_FILE}.${BUP_EXT}" "$MK_FILE" \
+        || fails_msg "Makefile"
+    elif [ ! -f "${MK_FILE}.${BUP_EXT}" ]; then
+        already_msg "$MK_FILE"
+    fi
+    
+    # linux_logo.h
+    if [ -f "${LINUX_H}.${BUP_EXT}" ]; then
+        restore_msg "$LINUX_H"
+        movez "${LINUX_H}.${BUP_EXT}" "$LINUX_H" \
+        || fails_msg "linux_logo.h"
+    elif [ ! -f "${LINUX_H}.${BUP_EXT}" ]; then
+        already_msg "$LINUX_H"
+    fi
+    
+    newxit
+    
+    # logo_?_clut224.ppm (special)
+    msg "The converted logo such ${g}logo_?_clut224.ppm${NC} not removed from the Linux kernel source."
+    msg "You may need to remove it manually! ${m}ツ${NC}"
+}
+
+# Parse the options firstly.
+while getopts ":p:rvh" OPTS; do
+    case "$OPTS" in
+        p)  LOGO="$OPTARG"
+        ;;
+        r)  RESTORE=1
+        ;;
+        v)  V="v"
+        ;;
+        h)  help
+        ;;
+        \?) err "Invalid option! (${m}-${OPTARG}${NC})"
+        ;;
+        :)  err "Detected (${m}-${OPTARG}${NC}) without argument."
+            if [ ${OPTARG} = p ]; then # Special message for `-p` option.
+                err "Please locate your logo! See help option (${m}-h${NC})."
+            fi
+        ;;
+    esac
+done
+shift $((OPTIND-1)) # Below will show help messages.
+[ ${OPTIND} -eq 1 ] && help || :
+
+# Detect the last arguments as Linux kernel source.
+kernel_detect "$@"
+
+# Patch the Linux kernel source if `-p` option passed.
+if [ -n "$RESTORE" ] && [ "$RESTORE" -eq 1 ]; then
+    kernel_restore
+fi; newxit
+if [ -n "$LOGO" ] && [ -n "$KERNEL_SOURCE" ]; then
+    any2ppm && kernel_patch
+fi; newxit
+
+# Unset all exported environment variables.
+unset V PRIV LOGONM DOTPPM LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE

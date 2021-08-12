@@ -7,8 +7,8 @@
 # https://github.com/owl4ce/linucc224
 
 LC_ALL=C LANG=C; # Speedup script by disable unicode. Below are color codes.
-R="\033[1;31m" G="\033[1;32m" M="\033[1;35m" W="\033[1;37m" B="\033[1;34m"
-NC="\033[0m" r="\033[0;31m" g="\033[4;32m" m="\033[0;35m" b="\033[0;34m"
+R="\033[1;31m" G="\033[1;32m" W="\033[1;37m" NC="\033[0m"
+r="\033[0;31m" g="\033[4;32m" m="\033[0;35m" b="\033[0;34m"
 
 # Output messages and error code marker.
 err() { >&2 printf "${R} > error:${NC} ${@}\n" && RC=1; }
@@ -287,7 +287,7 @@ shift $((OPTIND-1)) # Below will show help messages.
 # Detect the last arguments as Linux kernel source.
 kernel_detect "$@"
 
-# Patch the Linux kernel source if `-p` option passed.
+# Apply a patch or restore the Linux kernel source.
 if [ -n "$RESTORE" ] && [ "$RESTORE" -eq 1 ]; then
     kernel_restore
 fi
@@ -297,4 +297,3 @@ fi
 
 # Unset all exported environment variables.
 unset PRIV LOGONM DOTPPM LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE BUP_EXT
-exit $?

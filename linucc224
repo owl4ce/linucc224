@@ -80,10 +80,10 @@ kernel_detect() {
     LINUCC="drivers/video/logo/logo_linux_clut224.ppm"     # default logo_linux_clut224.ppm file.
     
     # There are contains 3 levels: manual locate, system installed, and invalid Linux kernel.
-    if { [ -L "$@" ] || [ -d "$@" ]; } 2>/dev/null && [ -f "${@}/${LINUCC}" ]; then # Manual.
+    if [ -L "$@" -o -d "$@" ] 2>/dev/null && [ -f "${@}/${LINUCC}" ]; then # Manual.
         msg "Linux kernel source detected as valid source! ${m}ツ${NC}"
         KERNEL_SOURCE="$@" && msg "${g}${KERNEL_SOURCE}${NC}"
-    elif [ -L "$LIBMOD" ] || [ -d "$LIBMOD" ] && [ -f "${LIBMOD}/${LINUCC}" ]; then # System.
+    elif [ -L "$LIBMOD" -o -d "$LIBMOD" ] && [ -f "${LIBMOD}/${LINUCC}" ]; then # System.
         msg "Linux kernel source not manually located or invalid source! Using valid fallback .."
         KERNEL_SOURCE="$LIBMOD" && msg "${g}${KERNEL_SOURCE}${NC}"
     else

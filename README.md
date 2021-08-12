@@ -1,4 +1,4 @@
-<h1 align="center">`linucc224`</h1>
+# <p align="center">`linucc224`</p>
 
 <details align="center">
   <summary>&#9776;</summary>

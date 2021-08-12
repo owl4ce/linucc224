@@ -19,7 +19,7 @@ str() { >&2 printf "${R}~~~${NC}\n"; } # For diff output.
 chkdep() {
     while [ -n "$1" ]; do
         if [ "$1" = "sudo" -o "$1" = "doas" ]; then
-            [ -x "$(command -v "$1")" ] && export PRIV="$1"
+            [ -x "$(command -v "$1")" ] && export PRIV="$1" || :
         elif [ "$1" != "sudo" -o "$1" != "doas" ] && [ ! -x "$(command -v "$1")" ]; then
             err "${m}${1}${NC} is not installed. Install it first! ${r}ツ${NC}"
             if [ "$1" = "ppmquant" ]; then # Special message for netpbm.
@@ -31,7 +31,7 @@ chkdep() {
 
 # Diffs between changes if verbose enabled.
 diffz() {
-    if [ "$V" = "v" ] && [ -x "$(command -v "diff")" ]; then
+    if [ "$V" = v ] && [ -x "$(command -v "diff")" ]; then
         str; >&2 diff --color=auto -u "$1" "$2"; str
     fi
 }
@@ -45,7 +45,7 @@ retcon() {
     while :; do
         msg "${m}[${NC}${R}enter${NC}/${R}return${NC} to continue${m}] [${NC}${R}ctrl${NC}+${R}c${NC} to cancel${m}]${NC}"
         read return_con
-        if [ -z "$return_con" ]; then break
+        if [ -z "$return_con" ]; then break # Below will unset the RC=1 since using `err`.
         else err "You pressed the wrong button! (${m}${return_con}${NC})" && unset RC
         fi
     done
@@ -268,7 +268,7 @@ while getopts ":p:rvh" OPTS; do
         ;;
         r)  RESTORE=1
         ;;
-        v)  V="v"
+        v)  V=v
         ;;
         h)  help
         ;;
@@ -290,10 +290,11 @@ kernel_detect "$@"
 # Patch the Linux kernel source if `-p` option passed.
 if [ -n "$RESTORE" ] && [ "$RESTORE" -eq 1 ]; then
     kernel_restore
-fi; newxit
+fi
 if [ -n "$LOGO" ] && [ -n "$KERNEL_SOURCE" ]; then
     any2ppm && kernel_patch
-fi; newxit
+fi
 
 # Unset all exported environment variables.
-unset V PRIV LOGONM DOTPPM LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE
+unset PRIV LOGONM DOTPPM LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE BUP_EXT
+exit $?

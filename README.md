@@ -1,9 +1,10 @@
 # <p align="center">`linucc224`</p>
 
 <details align="center">
-  <summary>&#9776; Don't see!</summary>
+  <summary>&#9776;</summary>
 
-<p align="center"><img src="https://repository-images.githubusercontent.com/393654854/5423f869-eadf-41c9-ba0b-078162f39b2f" align="center"/></p>
+  <br>
+  <p align="center"><img src="https://repository-images.githubusercontent.com/393654854/5423f869-eadf-41c9-ba0b-078162f39b2f" align="center"/></p>
 
 </details>
 

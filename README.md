@@ -54,14 +54,14 @@ https://github.com/owl4ce/linucc224
 > Some [notes](https://github.com/owl4ce/kurisu-x86_64) if you use an image more than 80x80 pixels. That takes some crazy tricks.
 
 > **How does it work?** :thinking:  
-> It patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch), flexibly based on your own logo filename.
+> It patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch), flexibly based on your own logo filename. So you can add the new logo continuously with different filenames. To purify the kernel source, it's reverted all except for the .ppm logo only.
 
 > I think, it works like a charm since linux 3.2 onwards.
 
 > :heavy_check_mark:   **`5.13.x`**
 
 ##  
-### Enable the new logo in menuconfig
+### Enable the new logo in the menuconfig
 
 > `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>
@@ -76,3 +76,6 @@ https://github.com/owl4ce/linucc224
 ### Now what?
 
 Of course rebuild the kernel. :disappointed_relieved:
+
+> **Does it take a long time?**  
+> **no**, if you have built the same kernel source before.

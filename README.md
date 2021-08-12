@@ -63,12 +63,12 @@ https://github.com/owl4ce/linucc224
 
 > Some [notes](https://github.com/owl4ce/kurisu-x86_64/#note) if you use an image more than **80**x**80** pixels. That takes some crazy tricks.
 
-> #### How does it work? :thinking:
+> **How does it work?** :thinking:  
 > It simply patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch) with a newly converted logo, flexibly based on your own logo filename. So you can add the new logo continuously with different filenames.  
 > 
 > In order to purify the kernel source, it's reverted all except for the **.ppm** logo only.
 
-> #### Does this have any side effect on performance? :thinking:
+> **Does this have any side effect on performance?** :thinking:  
 > **Nothing**, unless the image size is too big, maybe it will make the kernel to load a bit longer on boot.
 
 > I think, it works like a charm since **linux 3.2** onwards.

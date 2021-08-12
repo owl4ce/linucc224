@@ -13,7 +13,7 @@
 > **Required:**  
 > `sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
 > 
-> * *netpbm required for converting from any .ext into .ppm.
+> * *netpbm required for converting from any .ext into .ppm.*
 
 > **Optional:**  
 > `imagemagick` `diffutils`

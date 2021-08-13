@@ -152,8 +152,8 @@ kernel_patch() {
     if [ -f "$KCONFIG" ] && grep -qo "LOGO_${LOGOUPC}_CLUT224" "$KCONFIG"; then
         already_msg "$KCONFIG"
     elif [ -f "$KCONFIG" ]; then
-        patch_msg "$KCONFIG"
-        copyz "$KCONFIG" "${KCONFIG}.${BUP_EXT}" && \
+        patch_msg "$KCONFIG" # Below will back up the original source if it's not already backed up.
+        [ ! -f "${KCONFIG}.${BUP_EXT}" ] && copyz "$KCONFIG" "${KCONFIG}.${BUP_EXT}" || :
         ${PRIV} sed -i "/^config LOGO_LINUX_CLUT224/i \
 	config LOGO_${LOGOUPC}_CLUT224\n\
 	bool \"Custom 224-color ${LOGOCAP} logo\"\n\
@@ -166,8 +166,8 @@ kernel_patch() {
     if [ -f "$LOGO__C" ] && grep -qo "CONFIG_LOGO_${LOGOUPC}_CLUT224" "$LOGO__C"; then
         already_msg "$LOGO__C"
     elif [ -f "$LOGO__C" ]; then
-        patch_msg "$LOGO__C"
-        copyz "$LOGO__C" "${LOGO__C}.${BUP_EXT}" && \
+        patch_msg "$LOGO__C" # Below will back up the original source if it's not already backed up.
+        [ ! -f "${LOGO__C}.${BUP_EXT}" ] && copyz "$LOGO__C" "${LOGO__C}.${BUP_EXT}" || :
         ${PRIV} sed -i "/^#ifdef CONFIG_LOGO_LINUX_CLUT224/i \
 #ifdef CONFIG_LOGO_${LOGOUPC}_CLUT224\n\
 		/* Custom ${LOGOCAP} logo */\n\
@@ -181,8 +181,8 @@ kernel_patch() {
     if [ -f "$MK_FILE" ] && grep -qo "logo_${LOGONM}_clut224.o" "$MK_FILE"; then
         already_msg "$MK_FILE"
     elif [ -f "$MK_FILE" ]; then
-        patch_msg "$MK_FILE"
-        copyz "$MK_FILE" "${MK_FILE}.${BUP_EXT}" && \
+        patch_msg "$MK_FILE" # Below will back up the original source if it's not already backed up.
+        [ ! -f "${MK_FILE}.${BUP_EXT}" ] && copyz "$MK_FILE" "${MK_FILE}.${BUP_EXT}" || :
         ${PRIV} sed -i "/^obj-\$(CONFIG_LOGO_LINUX_CLUT224)	+= logo_linux_clut224.o/i \
 obj-\$(CONFIG_LOGO_${LOGOUPC}_CLUT224)	+= logo_${LOGONM}_clut224.o" "$MK_FILE" && \
         diffz "${MK_FILE}.${BUP_EXT}" "$MK_FILE" \
@@ -193,8 +193,8 @@ obj-\$(CONFIG_LOGO_${LOGOUPC}_CLUT224)	+= logo_${LOGONM}_clut224.o" "$MK_FILE" &
     if [ -f "$LINUX_H" ] && grep -qo "logo_${LOGONM}_clut224" "$LINUX_H"; then
         already_msg "$LINUX_H"
     elif [ -f "$LINUX_H" ]; then
-        patch_msg "$LINUX_H"
-        copyz "$LINUX_H" "${LINUX_H}.${BUP_EXT}" && \
+        patch_msg "$LINUX_H" # Below will back up the original source if it's not already backed up.
+        [ ! -f "${LINUX_H}.${BUP_EXT}" ] && copyz "$LINUX_H" "${LINUX_H}.${BUP_EXT}" || :
         ${PRIV} sed -i "/^extern const struct linux_logo logo_linux_clut224;/i \
 extern const struct linux_logo logo_${LOGONM}_clut224;" "$LINUX_H" && \
         diffz "${LINUX_H}.${BUP_EXT}" "$LINUX_H" \

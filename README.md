@@ -13,13 +13,13 @@
 > **Required:**  
 > `sh` `netpbm` `file` `coreutils` `grep` `sed` ( `doas` or `sudo` )
 > 
-> * *netpbm required for converting from any .ext into .ppm.*
+> * *netpbm is required to convert from any image .ext into .ppm.*
 
 > **Optional:**  
 > `imagemagick` `diffutils`
 >
-> * *imagemagick for better image identification.*
-> * *diffutils for verbose mode to view patch changes.*
+> * *imagemagick is just for better image identification.*
+> * *diffutils is only for verbose mode to view patch changes.*
 
 ##  
 ### Usage

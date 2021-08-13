@@ -60,7 +60,7 @@ chkdep "pngtopnm" "ppmquant" "pnmtoplainpnm" "file" "basename" "dirname" "grep" 
 [ -z "$PRIV" ] && err "${m}sudo${NC} or ${m}doas${NC} not installed on your system! ${r}ツ${NC}" || : # sudo/doas.
 newxit # Exit with correct return code if one of dependencies are not exist.
 
-# helps messages.
+# helps message.
 help() {
     printf "\n${R}*${NC} Easily add your own Linux framebuffer logo by patching it!\n"
     printf "\n${W}USAGE:${NC}"
@@ -102,7 +102,7 @@ kernel_detect() {
     export LINUX_H DRIVLOG KCONFIG LOGO__C MK_FILE BUP_EXT # export the environment variables.
 }
 
-# Convert the logo from any .ext into .ppm.
+# Convert the image from any .ext into .ppm.
 any2ppm() {
     # Identify if arguments is valid image file.
     ident() {
@@ -266,7 +266,7 @@ while getopts ":p:rvh" OPTS; do
     case "$OPTS" in
         p)  LOGO="$OPTARG"
         ;;
-        r)  RESTORE=1
+        r)  RALL=1
         ;;
         v)  V=v
         ;;
@@ -276,22 +276,22 @@ while getopts ":p:rvh" OPTS; do
         ;;
         :)  err "Detected (${m}-${OPTARG}${NC}) without argument."
             if [ ${OPTARG} = p ]; then # Special message for `-p` option.
-                err "Please locate your logo! See help option (${m}-h${NC})."
+                err "Please locate your image file! See help option (${m}-h${NC})."
             fi
         ;;
     esac
 done
-shift $((OPTIND-1)) # Below will show help messages.
+shift $((OPTIND-1)) # Below will show help message.
 [ ${OPTIND} -eq 1 ] && help || :
 
 # Detect the last arguments as Linux kernel source.
 kernel_detect "$@"
 
-# Apply a patch or restore the Linux kernel source.
-if [ -n "$RESTORE" ] && [ "$RESTORE" -eq 1 ]; then
+# Restore the Linux kernel source or apply a patch.
+if [ -n "$RALL" ]; then
     kernel_restore
 fi
-if [ -n "$LOGO" ] && [ -n "$KERNEL_SOURCE" ]; then
+if [ -n "$LOGO" ]; then
     any2ppm && kernel_patch
 fi
 

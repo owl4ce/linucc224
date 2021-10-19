@@ -73,10 +73,10 @@ https://github.com/owl4ce/linucc224
 
 > I think, it works like a charm since **linux 3.2** onwards.
 
-> :heavy_check_mark:   **`5.13.x`**
+> :heavy_check_mark:   **`5.14.x`**
 
 ##  
-### Enable the new logo in the menuconfig
+### Enable the new logo in the menuconfig/nconfig
 
 > `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>

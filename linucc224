@@ -9,8 +9,8 @@
 
 export LC_ALL=POSIX LANG=POSIX # Speed up script-execution.
 
-R="\033[1;31m" G="\033[1;32m" W="\033[1;37m" NC="\033[0m" \
-r="\033[0;31m" g="\033[4;32m" m="\033[0;35m" b="\033[0;34m"
+R='\033[1;31m' G='\033[1;32m' W='\033[1;37m' NC='\033[0m' \
+r='\033[0;31m' g='\033[4;32m' m='\033[0;35m' b='\033[0;34m'
 
 # Output messages and error code marker.
 die() { >&2 printf "${R} %s${NC} %b\n" '> error:' "${@}"; RC=1; }
@@ -60,7 +60,7 @@ return_confirm()
 }
 
 # Just call `coexit` instead of `exit $?`, we don't use `return <num>` here.
-# So if `err` called, the RC var will return with 1 as well as return codes.
+# So if `die` called, the RC var will return with 1 as well as return codes.
 coexit() { [ ${RC:-0} -eq 1 ] && exit ${RC} ||:; } # Except for help option.
 
 # Check all required dependencies.

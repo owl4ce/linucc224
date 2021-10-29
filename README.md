@@ -1,12 +1,6 @@
 # <p align="center">`linucc224`</p>
 
-<details align="center">
-  <summary>&#9776;</summary>
-
-  <br>
-  <p align="center"><img src="https://repository-images.githubusercontent.com/393654854/5423f869-eadf-41c9-ba0b-078162f39b2f" align="center"/></p>
-
-</details>
+<p align="center"><img alt="" src="https://repository-images.githubusercontent.com/393654854/60d275fa-7cdc-44ca-bd4d-773ad4b14196"/></p>
 
 ##  
 ### Dependencies <img alt="" align="right" src="https://badges.pufler.dev/visits/owl4ce/linucc224?style=flat-square&label=&color=000000&logo=GitHub&logoColor=white&labelColor=373e4d"/>
@@ -76,7 +70,7 @@ https://github.com/owl4ce/linucc224
 > :heavy_check_mark:   **`5.14.x`**
 
 ##  
-### Enable the new logo in the menuconfig/nconfig
+### Enable the new logo in the menuconfig / nconfig
 
 > `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>

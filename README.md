@@ -18,7 +18,7 @@
 ##  
 ### Usage
 ```sh
-$ sh <(curl -s "https://raw.githubusercontent.com/owl4ce/linucc224/main/linucc224") -h
+$ sh <(curl -sL https://git.io/JPZNd) -h
 ```
 ```sh
 
@@ -31,7 +31,7 @@ OPTIONS:
   -p /path/to/your_logo			[    patch    ]
   -r					[ restore all ]
   -v					[   verbose   ]
-  -h					[    helps    ]
+  -h					[  show help  ]
 
 https://github.com/owl4ce/linucc224
 
@@ -58,7 +58,7 @@ https://github.com/owl4ce/linucc224
 > Some [notes](https://github.com/owl4ce/kurisu-x86_64/#note) if you use an image more than **80**x**80** pixels. That takes some crazy tricks.
 
 > **How does it work?** :thinking:  
-> It simply patches the Linux source code as seen in this [example commit](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.patch) with a newly converted logo, flexibly based on your own logo filename. So you can add the new logo continuously with different filenames.  
+> It simply patches the Linux source code as seen in this [example diff](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.diff) with a newly converted logo, flexibly based on your own logo file-name. So you can add the new logo continuously with different file-names.  
 > 
 > In order to purify the kernel source, it's reverted all except for the **.ppm** logo only.
 
@@ -72,13 +72,13 @@ https://github.com/owl4ce/linucc224
 ##  
 ### Enable the new logo in the menuconfig / nconfig
 
-> `Device Drivers` -> `Graphics support` -> `Support for frame buffer devices`
+> `Device Drivers` 🡲 `Graphics support` 🡲 `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>
 
-> `Device Drivers` -> `Graphics support` -> `Console display driver support`
+> `Device Drivers` 🡲 `Graphics support` 🡲 `Console display driver support`
 <p align="center"><img src="./screenshots/2021-08-12-064710_1301x748_scrot.png" align="center"/></p>
 
-> `Device Drivers` -> `Graphics support` -> `Bootup logo`
+> `Device Drivers` 🡲 `Graphics support` 🡲 `Bootup logo`
 <p align="center"><img src="./screenshots/2021-08-12-064723_1301x748_scrot.png" align="center"/></p>
 
 ##  

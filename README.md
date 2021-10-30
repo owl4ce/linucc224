@@ -72,14 +72,14 @@ https://github.com/owl4ce/linucc224
 ##  
 ### Enable the new logo in the menuconfig / nconfig
 
-> `Device Drivers` 🡲 `Graphics support` 🡲 `Support for frame buffer devices`
-<p align="center"><img src="./screenshots/2021-08-12-064654_1301x748_scrot.png" align="center"/></p>
+> `Device Drivers` 🡲 `Graphics support` 🡲 `Frame buffer Devices` 🡲 `Support for frame buffer devices`
+<p align="center"><img src="./screenshots/2021-10-30-074154_1301x748_scrot.png" align="center"/></p>
 
 > `Device Drivers` 🡲 `Graphics support` 🡲 `Console display driver support`
-<p align="center"><img src="./screenshots/2021-08-12-064710_1301x748_scrot.png" align="center"/></p>
+<p align="center"><img src="./screenshots/2021-10-30-074222_1301x748_scrot.png" align="center"/></p>
 
 > `Device Drivers` 🡲 `Graphics support` 🡲 `Bootup logo`
-<p align="center"><img src="./screenshots/2021-08-12-064723_1301x748_scrot.png" align="center"/></p>
+<p align="center"><img src="./screenshots/2021-10-30-074247_1301x748_scrot.png" align="center"/></p>
 
 ##  
 ### Now what?

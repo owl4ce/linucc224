@@ -1,6 +1,6 @@
 # <p align="center">`linucc224`</p>
 
-<p align="center"><img alt="" src="https://repository-images.githubusercontent.com/393654854/60d275fa-7cdc-44ca-bd4d-773ad4b14196"/></p>
+<p align="center"><a href="#usage"><img alt="" src="https://repository-images.githubusercontent.com/393654854/b0784bd1-3211-4d96-a148-2ba7abda5073"/></a></p>
 
 ##  
 ### Dependencies <img alt="" align="right" src="https://badges.pufler.dev/visits/owl4ce/linucc224?style=flat-square&label=&color=000000&logo=GitHub&logoColor=white&labelColor=373e4d"/>
@@ -54,8 +54,7 @@ https://github.com/owl4ce/linucc224
 </details>
 
 ##  
-
-> Some [notes](https://github.com/owl4ce/kurisu-x86_64/#note) if you use an image more than **80**x**80** pixels. That takes some crazy tricks.
+> Some [notes](https://github.com/owl4ce/hikari-x86_64/#note) if you use an image more than **80**x**80** pixels. That takes some crazy tricks.
 
 > **How does it work?** :thinking:  
 > It simply patches the Linux source code as seen in this [example diff](https://github.com/owl4ce/linucc224/commit/90ddf7e7e23da39946142749c0761d824d045b3f.diff) with a newly converted logo, flexibly based on your own logo file-name. So you can add the new logo continuously with different file-names.  
@@ -71,7 +70,6 @@ https://github.com/owl4ce/linucc224
 
 ##  
 ### Enable the new logo in the menuconfig / nconfig
-
 > `Device Drivers` 🡲 `Graphics support` 🡲 `Frame buffer Devices` 🡲 `Support for frame buffer devices`
 <p align="center"><img src="./screenshots/2021-10-30-074154_1301x748_scrot.png" align="center"/></p>
 
@@ -83,8 +81,6 @@ https://github.com/owl4ce/linucc224
 
 ##  
 ### Now what?
-
 Of course rebuild the kernel. :disappointed_relieved:
-
 > **Does it take a long time?**  
 > **no**, if you have built the same kernel source before.

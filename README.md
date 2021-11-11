@@ -66,18 +66,65 @@ https://github.com/owl4ce/linucc224
 
 > I think, it works like a charm since **linux 3.2** onwards.
 
-> :heavy_check_mark:   **`5.14.x`**
+> :heavy_check_mark:   **`5.15.x`**
 
 ##  
-### Enable the new logo in the menuconfig / nconfig
-> `Device Drivers` 🡲 `Graphics support` 🡲 `Frame buffer Devices` 🡲 `Support for frame buffer devices`
-<p align="center"><img src="./screenshots/2021-10-30-074154_1301x748_scrot.png" align="center"/></p>
+### Follow this to enable framebuffer with new logo in the menuconfig / nconfig
+> ##### `Device Drivers` 🡲 `Firmware Drivers`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-085846_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> CONFIG_SYSFB_SIMPLEFB=y
+> ```
 
-> `Device Drivers` 🡲 `Graphics support` 🡲 `Console display driver support`
-<p align="center"><img src="./screenshots/2021-10-30-074222_1301x748_scrot.png" align="center"/></p>
+> ##### `Device Drivers` 🡲 `Graphics support`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-085944_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> # CONFIG_DRM_SIMPLEDRM is not set
+> ```
 
-> `Device Drivers` 🡲 `Graphics support` 🡲 `Bootup logo`
-<p align="center"><img src="./screenshots/2021-10-30-074247_1301x748_scrot.png" align="center"/></p>
+> ##### `Device Drivers` 🡲 `Graphics support` 🡲 `Frame buffer Devices` 🡲 `Support for frame buffer devices`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-090124_1301x748_scrot.png" align="center"/></p>
+>
+> ```cfg
+> CONFIG_FB_VGA16=m
+> CONFIG_FB_UVESA=m
+> ```
+>
+> <p align="center"><img src="./screenshots/2021-11-11-090141_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> CONFIG_FB_SIMPLE=y
+> ```
+
+> ##### `Device Drivers` 🡲 `Graphics support` 🡲 `Console display driver support`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-090159_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> CONFIG_FRAMEBUFFER_CONSOLE=y
+> ```
+
+> ##### `Device Drivers` 🡲 `Graphics support` 🡲 `Bootup logo`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-090215_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> LOGO_YOURLOGO_CLUT224=y
+> # CONFIG_LOGO_LINUX_CLUT224 is not set
+> ```
+
+> ##### `Library routines`
+> 
+> <p align="center"><img src="./screenshots/2021-11-11-090239_1301x748_scrot.png" align="center"/></p>
+> 
+> ```cfg
+> CONFIG_FONT_8x16=y
+> ```
 
 ##  
 ### Now what?

@@ -1,16 +1,23 @@
 #!/usr/bin/env sh
-#
-# POSIX-sh script to patch Linux source code to add custom framebuffer logo.
-#
-# Author:  Harry Elric <alternate-se7en@pm.me>
-# License: GPL-2.0
-# -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-# https://github.com/owl4ce/linucc224
 
-export LC_ALL=POSIX LANG=POSIX # Speed up script-execution.
+# Desc:   POSIX sh script to patch Linux kernel source code with custom framebuffer logo.
+# Author: Harry Kurn <alternate-se7en@pm.me>
+# URL:    https://github.com/owl4ce/linucc224
 
-R='\033[1;31m' G='\033[1;32m' W='\033[1;37m' NC='\033[0m' \
-r='\033[0;31m' g='\033[4;32m' m='\033[0;35m' b='\033[0;34m'
+# SPDX-License-Identifier: GPL-2.0
+
+# Speeds up script-execution by using C or POSIX locale instead of UTF-?? locales.
+export LANG='POSIX'
+
+# ANSI color escape sequences.
+NC='\033[0m' \
+R='\033[1;31m' \
+r='\033[0;31m' \
+G='\033[1;32m' \
+g='\033[4;32m' \
+b='\033[0;34m' \
+m='\033[0;35m' \
+W='\033[1;37m'
 
 # Output messages and error code marker.
 die() { >&2 printf "${R} %s${NC} %b\n" '> error:' "${@}"; RC=1; }
